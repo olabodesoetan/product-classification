@@ -1,0 +1,38 @@
+!pip install pandas sklearn
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+data = pd.read_csv('https://raw.githubusercontent.com/zygmuntz/wine-quality/master/winequality/winequality-red.csv', delimiter=None, sep=';')
+df = pd.DataFrame(data)
+
+df.head()
+df.describe()
+names = ['K Nearest Neighbors', 'Decision Tree', 'Linear Regression', 'Logistic Regression', 'Naive Bayes', 'Random Forest']
+
+classifiers = {
+    KNeighborsClassifier(),
+    DecisionTreeClassifier(),
+    LinearRegression(),
+    LogisticRegression(),
+    MultinomialNB(),
+    RandomForestClassifier()
+}
+models = zip(names, classifiers)
+X = data.iloc[:, 0:11].values
+y = data.iloc[:, -1].values
+print(X.shape)
+print(y.shape)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10)
+# for name, model in models:
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print(name, ':', y_pred)
+print(name, ':', accuracy_score(y_test, y_pred)*100)
